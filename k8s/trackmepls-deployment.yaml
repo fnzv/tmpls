@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mytrackinservice-probe
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      run: mytrackinservice-probe
+  template:
+    metadata:
+      labels:
+        run: mytrackinservice-probe
+    spec:
+      imagePullSecrets:
+        - name: mygitlabregcredentials
+      containers:
+      - name: master
+        image: registry.gitlab.com/username/mytrackinservice:master
+        imagePullPolicy: Always
+        name: mytrackinservice-probe
+        ports:
+        - containerPort: 80
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mytrackinservice-probe-svc
+spec:
+  ports:
+  - nodePort: 31337
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: mytrackinservice-probe
+  sessionAffinity: None
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: mytrackinservice-ingress
+  annotations:
+spec:
+  rules:
+  - host: mytrackingservice.xyz
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: trackmepls-probe-svc
+          servicePort: 80
