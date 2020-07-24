@@ -50,5 +50,5 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: trackmepls-probe-svc
+          serviceName: mytrackinservice-probe-svc
           servicePort: 80
