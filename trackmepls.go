@@ -70,7 +70,7 @@ func headers(w http.ResponseWriter, req *http.Request) {
         if uri != "" {
                 log.Println("IP " + ip + " - " + ipreal + " just opened " + uri)
                 log.Println("User-agent: " + ua)
-                telegramNotify("IP " + ipreal + " just opened " + uri)
+                telegramNotify("IP " + ip + " - " + ipreal + " just opened " + uri)
                 telegramNotify("User-agent: " + ua)
                 //redirect to original host
                 http.Redirect(w, req, "http://"+uri, 301)
